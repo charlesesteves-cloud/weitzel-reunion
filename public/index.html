@@ -116,11 +116,11 @@ const VOTE_STYLES = {
   Maybe: { bg:"#fff8e6", border:"#f0a500", text:"#7a5500", emoji:"~" },
   No:    { bg:"#fde8e8", border:"#e74c3c", text:"#7a1a1a", emoji:"✕" },
 };
-const SLOTS = ["Day","Night","Whenever","Too Busy"];
+const SLOTS = ["Day","Night","Day + Night!","Too Busy"];
 const SLOT_COLORS = {
   Day:        { bg:"#fff8e0", border:"#f0c040", text:"#7a5a00" },
   Night:      { bg:"#eef0ff", border:"#6c7ae0", text:"#2a3080" },
-  Whenever:   { bg:"#edfdf4", border:"#3ecf8e", text:"#1a6645" },
+  Day + Night!:   { bg:"#edfdf4", border:"#3ecf8e", text:"#1a6645" },
   "Too Busy": { bg:"#fde8e8", border:"#e74c3c", text:"#7a1a1a" },
 };
 
@@ -346,7 +346,7 @@ function renderResults() {
   } else {
     tabContent = DATES.map(date => {
       const busyCount = data.responses.filter(r=>(r.availability?.[date]||[]).includes("Too Busy")).length;
-      const chips = ["Day","Night","Whenever"].map(slot => {
+      const chips = ["Day","Night","Day + Night!"].map(slot => {
         const count = data.responses.filter(r=>(r.availability?.[date]||[]).includes(slot)).length;
         const sc = SLOT_COLORS[slot];
         const pct = totalResponders > 0 ? (count/totalResponders)*100 : 0;
