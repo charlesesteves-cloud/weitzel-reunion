@@ -347,7 +347,7 @@ function renderResults() {
   } else {
     tabContent = DATES.map(date => {
       const busyCount = data.responses.filter(r=>(r.availability?.[date]||[]).includes("Too Busy")).length;
-      const chips = ["Day","Night","All Day / Night!"].map(slot => {
+      const chips = ["Day","Night","All Day / All Night!"].map(slot => {
         const count = data.responses.filter(r=>(r.availability?.[date]||[]).includes(slot)).length;
         const sc = SLOT_COLORS[slot];
         const pct = totalResponders > 0 ? (count/totalResponders)*100 : 0;
