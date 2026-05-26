@@ -87,7 +87,7 @@
 <script>
 const ACTIVITIES = [
   { id: "red_roost", label: "Red Roost", desc: "Classic all-you-can-eat crab house" },
-  { id: "house_tour", label: "This Old-House Tour", desc: "See where the Grandparents grew up and other Weitzel Family sentimental sites..." },
+  { id: "house_tour", label: "House Tour", desc: "See everyone's space, catch up, settle in" },
   { id: "golf", label: "Golf", desc: "18 holes for the crew, tee times needed" },
   { id: "gokarts_minigolf", label: "Go-Karts & Mini Golf", desc: "Baja Amusements has both in one spot" },
   { id: "paintball", label: "Paintball", desc: "Competitive, chaotic, everyone loves to hate it" },
@@ -225,6 +225,7 @@ function renderName() {
       <p>Vote on activities, suggest new ones, and mark when you're available.</p>
       <label>Your name</label>
       <input type="text" id="name-input" placeholder="First name is fine" value="${state.name}" />
+      <p style="font-size:12px;color:#888;font-family:sans-serif;margin-top:6px">Already responded? Enter your name to update your answers.</p>
       <div id="name-error" class="error-msg" style="display:none"></div>
       <button class="btn-primary" id="btn-start">Get Started →</button>
       <button class="btn-ghost" id="btn-view-results">View Results</button>
@@ -400,11 +401,23 @@ function renderResults() {
 function attachEvents() {
   // Name screen
   const btnStart = document.getElementById("btn-start");
-  if (btnStart) btnStart.onclick = () => {
+  if (btnStart) btnStart.onclick = async () => {
     const val = document.getElementById("name-input").value.trim();
     if (!val) { document.getElementById("name-error").textContent="Please enter your name"; document.getElementById("name-error").style.display="block"; return; }
-    setState({ name: val, screen: "activities" });
-    loadCustomActivities();
+    // Check for existing response and pre-fill if found
+    try {
+      const data = await apiGet();
+      const prior = data.responses.find(r => r.name.toLowerCase() === val.toLowerCase());
+      const customs = data.customs || [];
+      if (prior) {
+        setState({ name: val, activityVotes: prior.activityVotes || {}, availability: prior.availability || {}, customActivities: customs, screen: "activities" });
+      } else {
+        setState({ name: val, activityVotes: {}, availability: {}, customActivities: customs, screen: "activities" });
+      }
+    } catch(e) {
+      setState({ name: val, screen: "activities" });
+      loadCustomActivities();
+    }
   };
   const nameInput = document.getElementById("name-input");
   if (nameInput) nameInput.onkeydown = e => { if(e.key==="Enter") btnStart.click(); };
