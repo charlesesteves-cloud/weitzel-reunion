@@ -2,7 +2,7 @@
 
 ## Deploy to Vercel
 
-1. Go to github.com and create a new repository called `weitzel-reunion`
+1. Go to github.com and create a new repository called `weitzel-reunion`!! !
 2. Upload all these files to the repository (drag and drop works)
 3. Go to vercel.com, click "Add New Project"
 4. Import your `weitzel-reunion` GitHub repository
