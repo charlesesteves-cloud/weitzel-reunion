@@ -116,11 +116,11 @@ const VOTE_STYLES = {
   Maybe: { bg:"#fff8e6", border:"#f0a500", text:"#7a5500", emoji:"~" },
   No:    { bg:"#fde8e8", border:"#e74c3c", text:"#7a1a1a", emoji:"✕" },
 };
-const SLOTS = ["Day","Night","Day + Night!","Too Busy"];
+const SLOTS = ["Day","Night","All Day + Night","Too Busy"];
 const SLOT_COLORS = {
   Day:        { bg:"#fff8e0", border:"#f0c040", text:"#7a5a00" },
   Night:      { bg:"#eef0ff", border:"#6c7ae0", text:"#2a3080" },
-  Day + Night!:   { bg:"#edfdf4", border:"#3ecf8e", text:"#1a6645" },
+  Whenever:   { bg:"#edfdf4", border:"#3ecf8e", text:"#1a6645" },
   "Too Busy": { bg:"#fde8e8", border:"#e74c3c", text:"#7a1a1a" },
 };
 
@@ -346,7 +346,7 @@ function renderResults() {
   } else {
     tabContent = DATES.map(date => {
       const busyCount = data.responses.filter(r=>(r.availability?.[date]||[]).includes("Too Busy")).length;
-      const chips = ["Day","Night","Day + Night!"].map(slot => {
+      const chips = ["Day","Night","All Day + Night"].map(slot => {
         const count = data.responses.filter(r=>(r.availability?.[date]||[]).includes(slot)).length;
         const sc = SLOT_COLORS[slot];
         const pct = totalResponders > 0 ? (count/totalResponders)*100 : 0;
@@ -376,6 +376,15 @@ function renderResults() {
   return `<div>
     ${renderHero(`Results · ${totalResponders} ${totalResponders===1?"response":"responses"} so far`)}
     ${state.submitted ? `<div class="success-banner">🎉 Your response was saved, ${state.name}!</div>` : ""}
+    ${data && data.responses.length > 0 ? `
+    <div style="padding:12px 16px 0">
+      <div style="background:#fff;border:2px solid #eee;border-radius:14px;padding:14px 16px">
+        <div style="font-weight:700;font-size:14px;color:#1a2a3a;margin-bottom:10px;font-family:sans-serif">✅ Responded (${data.responses.length})</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">
+          ${data.responses.map(r => `<span style="font-size:13px;background:#e6f9ee;color:#1a7a45;border:1px solid #2ecc71;padding:4px 12px;border-radius:20px;font-family:sans-serif;font-weight:600">${r.name}</span>`).join("")}
+        </div>
+      </div>
+    </div>` : ""}
     <div class="tab-row">
       <button class="tab ${actTab?"active":""}" id="tab-activities">Activities</button>
       <button class="tab ${!actTab?"active":""}" id="tab-availability">Availability</button>
